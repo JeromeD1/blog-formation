@@ -1,4 +1,4 @@
-package org.wildcodeschool.blog.model;
+package org.wildcodeschool.blog.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -37,6 +37,7 @@ public class Article {
     public void update(){
         this.updatedAt = LocalDateTime.now();
     }
+
 }
 
 

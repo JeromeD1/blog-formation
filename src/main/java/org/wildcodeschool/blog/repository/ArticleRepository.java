@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.wildcodeschool.blog.model.Article;
+import org.wildcodeschool.blog.model.entity.Article;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -6,8 +6,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.wildcodeschool.blog.model.Article;
-import org.wildcodeschool.blog.model.Category;
+import org.wildcodeschool.blog.mapper.ArticleMapper;
+import org.wildcodeschool.blog.model.DTO.ArticleDTO;
+import org.wildcodeschool.blog.model.entity.Article;
+import org.wildcodeschool.blog.model.entity.Category;
 import org.wildcodeschool.blog.repository.ArticleRepository;
 import org.wildcodeschool.blog.repository.CategoryRepository;
 
@@ -20,28 +22,30 @@ import java.util.List;
 public class ArticleController {
     private ArticleRepository articleRepository;
     private CategoryRepository categoryRepository;
+    private ArticleMapper articleMapper;
 
 
     @GetMapping
-    public ResponseEntity<List<Article>> getAllArticles() {
+    public ResponseEntity<List<ArticleDTO>> getAllArticles() {
         List<Article> articles = articleRepository.findAll();
         if (articles.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(articles);
+        List<ArticleDTO> articlesDTO = articles.stream().map(articleMapper::convertToDTO).toList();
+        return ResponseEntity.ok(articlesDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> getArticleById(@PathVariable long id) {
+    public ResponseEntity<ArticleDTO> getArticleById(@PathVariable long id) {
         Article article = articleRepository.findById(id).orElse(null);
         if (article == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(article);
+        return ResponseEntity.ok(articleMapper.convertToDTO(article));
     }
 
     @PostMapping
-    public ResponseEntity<Article> createArticle(@RequestBody Article article) {
+    public ResponseEntity<ArticleDTO> createArticle(@RequestBody Article article) {
         if(article.getCategory() != null) {
             Category category = categoryRepository.findById(article.getCategory().getId()).orElse(null);
             if (category == null) {
@@ -51,11 +55,11 @@ public class ArticleController {
             }
         }
         Article savedArticle = articleRepository.save(article);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedArticle);
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleMapper.convertToDTO(savedArticle));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Article> updateArticle(@RequestBody Article articleDetails, @PathVariable long id) {
+    public ResponseEntity<ArticleDTO> updateArticle(@RequestBody Article articleDetails, @PathVariable long id) {
         Article articleToUpdate = articleRepository.findById(id).orElse(null);
         if (articleToUpdate == null) {
             return ResponseEntity.notFound().build();
@@ -72,12 +76,12 @@ public class ArticleController {
                 articleToUpdate.setCategory(category);
             }
             Article savedArticle = articleRepository.save(articleToUpdate);
-            return ResponseEntity.ok(savedArticle);
+            return ResponseEntity.ok(articleMapper.convertToDTO(savedArticle));
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Article> deleteArticle(@PathVariable long id) {
+    public ResponseEntity<Void> deleteArticle(@PathVariable long id) {
         Article articleToDelete = articleRepository.findById(id).orElse(null);
         if (articleToDelete == null) {
             return ResponseEntity.notFound().build();
@@ -87,39 +91,43 @@ public class ArticleController {
     }
 
     @GetMapping("/title/{title}")
-    public ResponseEntity<List<Article>> getArticleByTitle(@PathVariable String title) {
+    public ResponseEntity<List<ArticleDTO>> getArticleByTitle(@PathVariable String title) {
         List<Article> articles = articleRepository.findByTitle(title);
         if (articles.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(articles);
+        List<ArticleDTO> articlesDTO = articles.stream().map(articleMapper::convertToDTO).toList();
+        return ResponseEntity.ok(articlesDTO);
     }
 
     @GetMapping("/content/contain/{content}")
-    public ResponseEntity<List<Article>> getArticleByContent(@PathVariable String content) {
+    public ResponseEntity<List<ArticleDTO>> getArticleByContent(@PathVariable String content) {
         List<Article> articles = articleRepository.findByContentContaining(content);
         if(articles.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(articles);
+        List<ArticleDTO> articlesDTO = articles.stream().map(articleMapper::convertToDTO).toList();
+        return ResponseEntity.ok(articlesDTO);
     }
 
     @GetMapping("/createdAfter/{date}")
-    public ResponseEntity<List<Article>> getArticleByCreatedAfter(@PathVariable String date) {
+    public ResponseEntity<List<ArticleDTO>> getArticleByCreatedAfter(@PathVariable String date) {
         LocalDateTime limitDate = LocalDateTime.parse(date);
         List<Article> articles = articleRepository.findByCreatedAtAfter(limitDate);
         if(articles.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(articles);
+        List<ArticleDTO> articlesDTO = articles.stream().map(articleMapper::convertToDTO).toList();
+        return ResponseEntity.ok(articlesDTO);
     }
 
     @GetMapping("/last")
-    public ResponseEntity<Page<Article>> getArticleByLast() {
+    public ResponseEntity<List<ArticleDTO>> getArticleByLast() {
         Page<Article> articles = articleRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(0,5));
         if(articles.isEmpty()){
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(articles);
+        List<ArticleDTO> articlesDTO = articles.stream().map(articleMapper::convertToDTO).toList();
+        return ResponseEntity.ok(articlesDTO);
     }
 }
