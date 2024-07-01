@@ -1,13 +1,12 @@
 package org.wildcodeschool.blog.model.DTO;
 
 import lombok.Data;
-import org.wildcodeschool.blog.model.entity.Article;
 
 import java.util.List;
 
 @Data
-public class CategoryDTO {
+public class TagDTO {
     private Long id;
     private String name;
-    private List<Article> articles;
+    private List<Long> articleIds;
 }

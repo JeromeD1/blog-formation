@@ -1,0 +1,18 @@
+meta {
+  name: Update by id
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/category/3
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 3,
+    "name": "Voiturette"
+  }
+}

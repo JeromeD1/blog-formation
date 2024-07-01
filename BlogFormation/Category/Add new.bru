@@ -1,0 +1,17 @@
+meta {
+  name: Add new
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/category
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Voiture"
+  }
+}
