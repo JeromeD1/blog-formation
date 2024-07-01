@@ -21,6 +21,11 @@ public class Article {
 
     private LocalDateTime updatedAt;
 
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @PrePersist
     public void create(){
         final LocalDateTime now = LocalDateTime.now();

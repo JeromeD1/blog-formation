@@ -1,0 +1,22 @@
+meta {
+  name: Update by id
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:8080/article/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "title": "title 1",
+      "content": "content 1",
+      "category": {
+          "id": 1,
+          "name": "Vacances"
+      }
+  }
+}
