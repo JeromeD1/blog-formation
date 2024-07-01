@@ -1,12 +1,15 @@
 package org.wildcodeschool.blog.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.wildcodeschool.blog.model.Article;
 import org.wildcodeschool.blog.repository.ArticleRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -60,5 +63,42 @@ public class ArticleController {
         }
         articleRepository.delete(articleToDelete);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/title/{title}")
+    public ResponseEntity<List<Article>> getArticleByTitle(@PathVariable String title) {
+        List<Article> articles = articleRepository.findByTitle(title);
+        if (articles.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(articles);
+    }
+
+    @GetMapping("/content/contain/{content}")
+    public ResponseEntity<List<Article>> getArticleByContent(@PathVariable String content) {
+        List<Article> articles = articleRepository.findByContentContaining(content);
+        if(articles.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(articles);
+    }
+
+    @GetMapping("/createdAfter/{date}")
+    public ResponseEntity<List<Article>> getArticleByCreatedAfter(@PathVariable String date) {
+        LocalDateTime limitDate = LocalDateTime.parse(date);
+        List<Article> articles = articleRepository.findByCreatedAtAfter(limitDate);
+        if(articles.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(articles);
+    }
+
+    @GetMapping("/last")
+    public ResponseEntity<Page<Article>> getArticleByLast() {
+        Page<Article> articles = articleRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(0,5));
+        if(articles.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(articles);
     }
 }
