@@ -1,7 +1,6 @@
 package org.wildcodeschool.blog.model.DTO;
 
 import lombok.Data;
-import org.wildcodeschool.blog.model.entity.Tag;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,4 +14,5 @@ public class ArticleDTO {
     private LocalDateTime updatedAt;
     private Long categoryId;
     private List<Long> tagIds;
+    private List<ArticleAuthorDTO> authors;
 }

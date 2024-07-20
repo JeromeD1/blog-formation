@@ -27,13 +27,16 @@ public class Article {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(mappedBy = "articles")
+    @ManyToMany //(mappedBy = "articles")
     @JoinTable(
             name = "article_tag",
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags;
+
+    @OneToMany(mappedBy = "article")
+    private List<ArticleAuthor> articleAuthors;
 
     @PrePersist
     public void create(){
