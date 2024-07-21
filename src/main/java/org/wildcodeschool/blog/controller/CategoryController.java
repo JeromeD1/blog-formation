@@ -1,5 +1,6 @@
 package org.wildcodeschool.blog.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +40,12 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO category) {
+    public ResponseEntity<CategoryDTO> create(@Valid @RequestBody CategoryDTO category) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(category));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO category) {
+    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryDTO category) {
         Optional<CategoryDTO> categoryDTO = categoryService.update(id, category);
         if (categoryDTO.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(categoryDTO.get());

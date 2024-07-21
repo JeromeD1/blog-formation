@@ -1,5 +1,6 @@
 package org.wildcodeschool.blog.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,13 +43,13 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ResponseEntity<ArticleDTO> createArticle(@RequestBody ArticleDTO articleDTO) {
+    public ResponseEntity<ArticleDTO> createArticle(@Valid @RequestBody ArticleDTO articleDTO) {
         ArticleDTO savedArticleDTO = articleService.createArticle(articleDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedArticleDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ArticleDTO> updateArticle(@PathVariable Long id, @RequestBody ArticleDTO articleDTO) {
+    public ResponseEntity<ArticleDTO> updateArticle(@PathVariable Long id, @Valid @RequestBody ArticleDTO articleDTO) {
         Optional<ArticleDTO> updatedArticleDTO = articleService.updateArticle(id, articleDTO);
         if (!updatedArticleDTO.isPresent()) {
             return ResponseEntity.notFound().build();

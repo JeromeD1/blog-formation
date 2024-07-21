@@ -1,5 +1,6 @@
 package org.wildcodeschool.blog.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +39,12 @@ public class TagController {
     }
 
     @PostMapping
-    public ResponseEntity<TagDTO> create(@RequestBody TagDTO tag) {
+    public ResponseEntity<TagDTO> create(@Valid @RequestBody TagDTO tag) {
         return ResponseEntity.status(HttpStatus.CREATED).body(tagService.create(tag));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TagDTO> update(@PathVariable Long id, @RequestBody TagDTO tag) {
+    public ResponseEntity<TagDTO> update(@PathVariable Long id,@Valid @RequestBody TagDTO tag) {
         Optional<TagDTO> tagDTO = tagService.update(id, tag);
         if (tagDTO.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(tagDTO.get());
