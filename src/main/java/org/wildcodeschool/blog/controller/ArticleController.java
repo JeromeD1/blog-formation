@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.wildcodeschool.blog.exception.RessourceNotFoundException;
 import org.wildcodeschool.blog.model.DTO.ArticleDTO;
 import org.wildcodeschool.blog.service.ArticleService;
 
@@ -29,11 +30,15 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ArticleDTO> getArticleById(@PathVariable long id) {
-        Optional<ArticleDTO> articleDTO = articleService.getArticleById(id);
-        if (!articleDTO.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(articleDTO.get());
+//        Optional<ArticleDTO> articleDTO = articleService.getArticleById(id);
+//        if (!articleDTO.isPresent()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(articleDTO.get());
+        ArticleDTO articleDTO = articleService.getArticleById(id)
+                .orElseThrow(() -> new RessourceNotFoundException("L'article avec l'id " + id + " n'a pas été trouvé"));
+
+        return ResponseEntity.ok(articleDTO);
     }
 
     @PostMapping
