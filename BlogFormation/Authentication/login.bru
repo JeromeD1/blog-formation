@@ -16,3 +16,17 @@ body:json {
       "password": "password"
   }
 }
+
+script:post-response {
+  const cookies = res.getHeader('set-cookie');
+  
+  if(cookies) {
+    bru.setVar("cookie", cookies.join('; '));
+  }
+  
+  const token = res.getBody().token;
+  
+  if(token) {
+    bru.setVar("authorization", "Bearer " + token);
+  }
+}

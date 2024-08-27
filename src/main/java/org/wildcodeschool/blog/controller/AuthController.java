@@ -28,12 +28,23 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody UserRegistrationDTO userRegistrationDTO) {
-        User registeredUser = userService.registerUser(
-                userRegistrationDTO.getEmail(),
-                userRegistrationDTO.getPassword(),
-                Set.of("ROLE_USER") // Par défaut, chaque utilisateur aura le rôle "USER"
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+        if(userRegistrationDTO.getEmail().equals("admin@mail.com")){
+            User registeredUser = userService.registerUser(
+                    userRegistrationDTO.getEmail(),
+                    userRegistrationDTO.getPassword(),
+                    Set.of("ROLE_ADMIN")
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+        } else {
+            User registeredUser = userService.registerUser(
+                    userRegistrationDTO.getEmail(),
+                    userRegistrationDTO.getPassword(),
+                    Set.of("ROLE_USER") // Par défaut, chaque utilisateur aura le rôle "USER"
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+        }
+
+
     }
 
     @PostMapping("/login")

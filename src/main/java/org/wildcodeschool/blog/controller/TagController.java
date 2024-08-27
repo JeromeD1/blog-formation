@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.wildcodeschool.blog.model.DTO.TagDTO;
 import org.wildcodeschool.blog.service.TagService;
@@ -44,6 +45,7 @@ public class TagController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<TagDTO> update(@PathVariable Long id,@Valid @RequestBody TagDTO tag) {
         Optional<TagDTO> tagDTO = tagService.update(id, tag);
         if (tagDTO.isPresent()) {
