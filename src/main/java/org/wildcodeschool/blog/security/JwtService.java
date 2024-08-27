@@ -18,8 +18,8 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
-    @Value("${security.jwt.secret}")
-    private String jwtSecret;
+//    @Value("${security.jwt.secret}")
+//    private String jwtSecret;
 
     public String generateToken(UserDetails userDetails) {
 //        System.out.println("userDetails: " + userDetails.getUsername());
@@ -42,7 +42,7 @@ public class JwtService {
                     .claim("roles", userDetails.getAuthorities())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                    .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                    .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,6 +51,7 @@ public class JwtService {
     }
 
     public Claims extractClaims(String token) {
+        System.out.println("token: " + token);
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
